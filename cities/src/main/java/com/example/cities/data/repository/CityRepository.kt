@@ -1,11 +1,11 @@
 package com.example.cities.data.repository
 
-import com.example.cities.data.source.local.CityLocalDataSource
 import com.example.cities.data.source.local.ICityLocalDataSource
-import com.example.cities.data.source.remote.CityRemoteDataSource
 import com.example.cities.data.source.remote.ICityRemoteDataSource
 import com.example.core.model.dto.CitiesResponse
 import com.example.core.model.dto.City
+import com.example.core.model.dto.Query
+import com.example.core.model.dto.QueryType.*
 import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType.*
 import com.example.core.model.entity.CityEntity
@@ -18,22 +18,33 @@ class CityRepository @Inject constructor (private val localDataSource: ICityLoca
                                           private val remoteDataSource: ICityRemoteDataSource,
                                           private val ioDispatcher: CoroutineDispatcher) {
 
-    fun getAndCacheCitiesByPageNumber(pageNumber: Int) = flow {
-        val remoteResponse = remoteDataSource.getCitiesByPageNumber(pageNumber)
-        val result = if (remoteResponse != null) {
-            saveAndGetCachedCitiesByPageNumber(pageNumber, remoteResponse)
-        } else {
-            fallbackToCacheOnNetworkError(pageNumber)
+    fun fetchAndCacheCities(query: Query) = flow {
+        val remoteResponse = when(query.queryType) {
+            PAGE_NUMBER -> {
+                remoteDataSource.getCitiesByPageNumber(query.value as Int)
+            }
+            CITY_NAME -> {
+                remoteDataSource.getCitiesByCityName(query.value as String)
+            }
         }
+        val result = processResponse(query, remoteResponse)
         emit(result)
     }.flowOn(ioDispatcher)
 
-    suspend fun saveAndGetCachedCitiesByPageNumber(pageNumber: Int, remoteResponse: CitiesResponse): Result {
+    suspend fun processResponse(query: Query, remoteResponse: CitiesResponse?) : Result {
+        return if (remoteResponse != null) {
+            saveAndGetCachedCities(query, remoteResponse)
+        } else {
+            fallbackToCacheOnNetworkError(query)
+        }
+    }
+
+    suspend fun saveAndGetCachedCities(query: Query, remoteResponse: CitiesResponse): Result {
         val list = getListFromResponse(remoteResponse)
         if (list.isNullOrEmpty()) return Result(NO_RESULT)
 
         saveCitiesFromResponse(remoteResponse)
-        return getCachedCitiesByPageNumber(pageNumber)
+        return getCachedCities(query)
     }
 
     suspend fun saveCitiesFromResponse(remoteResponse: CitiesResponse) {
@@ -41,8 +52,15 @@ class CityRepository @Inject constructor (private val localDataSource: ICityLoca
         localDataSource.save(list)
     }
 
-    fun getCachedCitiesByPageNumber(pageNumber: Int): Result {
-        val list = localDataSource.getCitiesByPageNumber(pageNumber)
+    fun getCachedCities(query: Query): Result {
+        val list = when(query.queryType) {
+            PAGE_NUMBER -> {
+                localDataSource.getCitiesByPageNumber(query.value as Int)
+            }
+            CITY_NAME -> {
+                localDataSource.getCitiesByCityName(query.value as String)
+            }
+        }
         return if (list.isNullOrEmpty()) Result(NO_RESULT) else Result(SUCCESS, list)
     }
 
@@ -67,9 +85,15 @@ class CityRepository @Inject constructor (private val localDataSource: ICityLoca
         return result
     }
 
-    fun fallbackToCacheOnNetworkError(pageNumber: Int): Result {
-        val list = localDataSource.getCitiesByPageNumber(pageNumber)
+    fun fallbackToCacheOnNetworkError(query: Query): Result {
+        val list = when(query.queryType) {
+            PAGE_NUMBER -> {
+                localDataSource.getCitiesByPageNumber(query.value as Int)
+            }
+            CITY_NAME -> {
+                localDataSource.getCitiesByCityName(query.value as String)
+            }
+        }
         return if (list.isNullOrEmpty()) Result(NETWORK_ERROR) else Result(SUCCESS, list)
     }
-
 }

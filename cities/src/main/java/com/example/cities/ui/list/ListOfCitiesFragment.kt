@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,8 @@ import com.example.cities.R
 import com.example.cities.databinding.FragmentListOfCitiesBinding
 import com.example.cities.ui.main.SharedViewModel
 import com.example.cities.util.EndlessRecyclerViewScrollListener
+import com.example.core.model.dto.Query
+import com.example.core.model.dto.QueryType
 import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType
 import com.example.core.model.entity.CityEntity
@@ -66,7 +69,10 @@ class ListOfCitiesFragment : Fragment() {
             UIStateType.SUCCESS -> { uiStateSuccess(result.cities) }
             UIStateType.NO_RESULT -> { uiStateNoResult() }
             UIStateType.NETWORK_ERROR -> { uiStateNetworkError() }
-            UIStateType.DEFAULT -> { setUpRecyclerView() }
+            UIStateType.DEFAULT -> {
+                setUpRecyclerView()
+                setUpSearchView()
+            }
         }
     }
 
@@ -103,7 +109,7 @@ class ListOfCitiesFragment : Fragment() {
     }
 
     private fun getCitiesByPageNumber(pageNumber: Int = 1) =
-        sharedViewModel.getCitiesByPageNumber(pageNumber)
+        sharedViewModel.getCities(Query(QueryType.PAGE_NUMBER, pageNumber))
 
     private fun setUpProgressBar() = with(binding) {
         progressBar.visibility = View.VISIBLE
@@ -124,6 +130,18 @@ class ListOfCitiesFragment : Fragment() {
                 getCitiesByPageNumber(sharedViewModel.getNextPageNumber())
             }
         })
+    }
+
+    private fun setUpSearchView() = with(binding) {
+        tvSearch.doAfterTextChanged {
+            val searchWord = it.toString()
+            sharedViewModel.getCities(Query(QueryType.CITY_NAME, searchWord))
+        }
+
+        tvSearchParent.setEndIconOnClickListener {
+            tvSearch.text?.clear()
+            getCitiesByPageNumber()
+        }
     }
 
     private fun navigateToMap(cityEntity: CityEntity) {

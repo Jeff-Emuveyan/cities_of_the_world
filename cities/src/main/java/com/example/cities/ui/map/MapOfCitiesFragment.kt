@@ -13,6 +13,8 @@ import com.example.cities.R
 import com.example.cities.databinding.FragmentMapOfCitiesBinding
 import com.example.cities.ui.main.SharedViewModel
 import com.example.cities.util.getAddress
+import com.example.core.model.dto.Query
+import com.example.core.model.dto.QueryType
 import com.example.core.model.entity.CityEntity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -105,7 +107,7 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun getCitiesByPageNumber(pageNumber: Int = 1) =
-        sharedViewModel.getCitiesByPageNumber(pageNumber)
+        sharedViewModel.getCities(Query(QueryType.PAGE_NUMBER, pageNumber))
 
     private fun setUpMap() {
         val supportMapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?

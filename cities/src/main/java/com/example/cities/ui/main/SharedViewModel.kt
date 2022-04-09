@@ -3,6 +3,8 @@ package com.example.cities.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cities.data.repository.CityRepository
+import com.example.core.model.dto.Query
+import com.example.core.model.dto.QueryType.*
 import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType.*
 import kotlinx.coroutines.flow.*
@@ -16,18 +18,20 @@ class SharedViewModel @Inject constructor(private val repository: CityRepository
     private val _uiState = MutableStateFlow(Result(DEFAULT))
     val uiState = _uiState.asStateFlow()
 
-    fun getCitiesByPageNumber(pageNumber: Int = 1) = viewModelScope.launch {
+    fun getCities(query: Query) = viewModelScope.launch {
         if (_uiState.value.type == LOADING) return@launch
 
-        repository.getAndCacheCitiesByPageNumber(pageNumber).onStart {
+        repository.fetchAndCacheCities(query).onStart {
             _uiState.value = Result(LOADING)
         }.collect {
-            handleResult(pageNumber, it)
+            handleResult(query, it)
         }
     }
 
-    private fun handleResult(pageNumber: Int, result: Result) {
-        if (result.type == SUCCESS) { currentPageNumber = pageNumber }
+    private fun handleResult(query: Query, result: Result) {
+        if (result.type == SUCCESS && (query.value is Int)) {
+            currentPageNumber = query.value as Int
+        }
         _uiState.value = result
     }
 
