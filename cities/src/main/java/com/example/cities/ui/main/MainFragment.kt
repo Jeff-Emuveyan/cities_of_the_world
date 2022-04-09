@@ -7,11 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.example.cities.databinding.MainFragmentBinding
 import com.example.cities.ui.list.ListOfCitiesFragment
 import com.example.cities.ui.map.MapOfCitiesFragment
+import com.example.core.model.entity.CityEntity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -33,6 +38,11 @@ class MainFragment : Fragment() {
         setUpUi()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setUpUi() = with(binding) {
         val adapter = Adapter(this@MainFragment)
         adapter.addFragment(ListOfCitiesFragment())
@@ -42,9 +52,16 @@ class MainFragment : Fragment() {
         viewPager.adapter = adapter
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun observe() {
+        sharedViewModel.zoomInOnCityFlow.onEach {
+            handleZoomInOnCityRequest(it)
+        }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
     }
 
+    private fun handleZoomInOnCityRequest(it: Pair<Boolean, CityEntity>) = with(binding)  {
+        val zoom = it.first
+        if (zoom) {
+            viewPager.setCurrentItem(1, true)
+        }
+    }
 }
