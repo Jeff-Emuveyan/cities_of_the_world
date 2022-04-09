@@ -104,6 +104,10 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
         sharedViewModel.uiState.onEach {
             setUpUI(it)
         }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
+
+        sharedViewModel.zoomInOnCityFlow.onEach {
+            handleZoomInOnCityRequest(it)
+        }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
     }
 
     private fun getCitiesByPageNumber(pageNumber: Int = 1) =
@@ -139,5 +143,13 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
             .build()
 
         googleMap?.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 3000, null)
+    }
+
+    private fun handleZoomInOnCityRequest(it: Pair<Boolean, CityEntity>) {
+        val zoom = it.first
+        val city = it.second
+        if (zoom) {
+            zoomCameraToLocation(city.lat ?: 0.0, city.lng ?: 0.0)
+        }
     }
 }

@@ -145,6 +145,6 @@ class ListOfCitiesFragment : Fragment() {
     }
 
     private fun navigateToMap(cityEntity: CityEntity) {
-
+        sharedViewModel.zoomInOnCity(true, cityEntity)
     }
 }

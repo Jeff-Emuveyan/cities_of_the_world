@@ -7,6 +7,7 @@ import com.example.core.model.dto.Query
 import com.example.core.model.dto.QueryType.*
 import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType.*
+import com.example.core.model.entity.CityEntity
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +18,9 @@ class SharedViewModel @Inject constructor(private val repository: CityRepository
 
     private val _uiState = MutableStateFlow(Result(DEFAULT))
     val uiState = _uiState.asStateFlow()
+
+    private val _zoomInOnCityFlow = MutableSharedFlow<Pair<Boolean, CityEntity>>()
+    val zoomInOnCityFlow = _zoomInOnCityFlow.asSharedFlow()
 
     fun getCities(query: Query) = viewModelScope.launch {
         if (_uiState.value.type == LOADING) return@launch
@@ -36,4 +40,8 @@ class SharedViewModel @Inject constructor(private val repository: CityRepository
     }
 
     fun getNextPageNumber() = currentPageNumber + 1
+
+    fun zoomInOnCity(zoom: Boolean, cityEntity: CityEntity) = viewModelScope.launch {
+        _zoomInOnCityFlow.emit(Pair(zoom, cityEntity))
+    }
 }
