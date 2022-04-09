@@ -47,7 +47,6 @@ class ListOfCitiesFragment : Fragment() {
     private fun getCitiesByPageNumber(pageNumber: Int = 1) =
         sharedViewModel.getCitiesByPageNumber(pageNumber)
 
-
     private fun setUpUI(result: Result) = with(binding) {
 
     }

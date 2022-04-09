@@ -11,15 +11,25 @@ import javax.inject.Inject
 
 class SharedViewModel @Inject constructor(private val repository: CityRepository) : ViewModel() {
 
+    private var currentPageNumber = 0
+
     private val _uiState = MutableStateFlow(Result(DEFAULT))
     val uiState = _uiState.asStateFlow()
 
     fun getCitiesByPageNumber(pageNumber: Int = 1) = viewModelScope.launch {
         if (_uiState.value.type == LOADING) return@launch
+
         repository.getAndCacheCitiesByPageNumber(pageNumber).onStart {
             _uiState.value = Result(LOADING)
         }.collect {
-            _uiState.value = it
+            handleResult(pageNumber, it)
         }
     }
+
+    private fun handleResult(pageNumber: Int, result: Result) {
+        if (result.type == SUCCESS) { currentPageNumber = pageNumber }
+        _uiState.value = result
+    }
+
+    fun getNextPageNumber() = currentPageNumber + 1
 }
