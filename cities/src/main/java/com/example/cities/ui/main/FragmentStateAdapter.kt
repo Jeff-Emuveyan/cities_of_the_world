@@ -1,4 +1,4 @@
-package com.example.cities.ui
+package com.example.cities.ui.main
 
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment

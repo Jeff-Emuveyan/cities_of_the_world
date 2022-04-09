@@ -36,6 +36,7 @@ android {
 
 dependencies {
     def nav_version = "2.4.1"
+    def roomVersion = '2.3.0'
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -48,8 +49,16 @@ dependencies {
     api "androidx.navigation:navigation-fragment-ktx:$nav_version"
     api "androidx.navigation:navigation-ui-ktx:$nav_version"
 
+    // retrofit
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
+    api 'com.squareup.retrofit2:converter-gson:2.9.0'
+    api "com.squareup.okhttp3:okhttp:4.7.2"
+    api 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    api 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+
     // hilt
-    //hilt
     api "com.google.dagger:hilt-android:2.33-beta"
     api 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
     kapt 'androidx.hilt:hilt-compiler:1.0.0-beta01'
@@ -57,6 +66,22 @@ dependencies {
 
     api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     api 'androidx.fragment:fragment-ktx:1.3.4'
+
+    //Room
+    api("androidx.room:room-runtime:$roomVersion") {
+        exclude group: 'com.google.code.gson'
+    }
+    api("androidx.room:room-ktx:$roomVersion") {
+        exclude group: 'com.google.code.gson'
+    }
+    kapt "androidx.room:room-compiler:$roomVersion"
+    androidTestImplementation("androidx.room:room-testing:$roomVersion") {
+        exclude group: 'com.google.code.gson'
+    }
+
+    // lifecycle
+    api 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    api 'androidx.fragment:fragment-ktx:1.4.1'
 }
 
 kapt {

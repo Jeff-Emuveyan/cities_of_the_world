@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.example.cities.R
-import com.example.cities.databinding.FragmentListOfCitiesBinding
 import com.example.cities.databinding.FragmentMapOfCitiesBinding
-import com.example.cities.ui.SharedViewModel
+import com.example.cities.ui.main.SharedViewModel
 
 
 class MapOfCitiesFragment : Fragment() {
