@@ -9,9 +9,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.cities.R
 import com.example.cities.databinding.FragmentListOfCitiesBinding
 import com.example.cities.ui.main.SharedViewModel
+import com.example.cities.util.EndlessRecyclerViewScrollListener
 import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType
 import com.example.core.model.entity.CityEntity
@@ -24,6 +26,7 @@ class ListOfCitiesFragment : Fragment() {
     private val sharedViewModel by activityViewModels<SharedViewModel>()
     private var _binding: FragmentListOfCitiesBinding? = null
     private val binding get() = _binding!!
+    private var cityAdapter: CityAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,11 +42,16 @@ class ListOfCitiesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observe()
+        setUpUi()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun setUpUi() {
+        setUpRecyclerView()
     }
 
     private fun observe() {
@@ -72,15 +80,11 @@ class ListOfCitiesFragment : Fragment() {
 
     private fun uiStateSuccess(cities: List<CityEntity>?) = with(binding) {
         if (cities == null) return@with
-        val layoutManager = LinearLayoutManager(requireContext())
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        recyclerView.layoutManager = layoutManager
-        val adapter = CityAdapter(requireContext(), cities) {
-            navigateToMap(it)
-        }
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = adapter
-        adapter.notifyDataSetChanged()
+        tvInfo.visibility = View.GONE
+        progressBar.visibility = View.GONE
+
+        cityAdapter?.cities?.addAll(cities)
+        cityAdapter?.notifyDataSetChanged()
     }
 
     private fun uiStateNoResult() = with(binding) {
@@ -108,6 +112,20 @@ class ListOfCitiesFragment : Fragment() {
         progressBar.settype(Type.RIPPLE)
         progressBar.setdurationTime(100)
         progressBar.show()
+    }
+
+    private fun setUpRecyclerView() = with(binding.recyclerView) {
+        val linearLayoutManager = LinearLayoutManager(requireContext())
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        layoutManager = linearLayoutManager
+        cityAdapter = CityAdapter(requireContext(), mutableListOf()) { navigateToMap(it) }
+        adapter = cityAdapter
+        setHasFixedSize(true)
+        addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+                getCitiesByPageNumber(sharedViewModel.getNextPageNumber())
+            }
+        })
     }
 
     private fun navigateToMap(cityEntity: CityEntity) {

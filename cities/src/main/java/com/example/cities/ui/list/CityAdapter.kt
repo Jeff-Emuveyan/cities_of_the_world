@@ -8,7 +8,7 @@ import com.example.cities.R
 import com.example.core.model.entity.CityEntity
 
 class CityAdapter(var context: Context,
-                  var cities: List<CityEntity>,
+                  var cities: MutableList<CityEntity>,
                   val onItemClicked: (CityEntity)-> Unit) : RecyclerView.Adapter<CityItem>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityItem {
