@@ -1,7 +1,9 @@
 package com.example.cities.data.repository
 
 import com.example.cities.data.source.local.CityLocalDataSource
+import com.example.cities.data.source.local.ICityLocalDataSource
 import com.example.cities.data.source.remote.CityRemoteDataSource
+import com.example.cities.data.source.remote.ICityRemoteDataSource
 import com.example.core.model.dto.CitiesResponse
 import com.example.core.model.dto.City
 import com.example.core.model.dto.ui.Result
@@ -12,8 +14,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class CityRepository @Inject constructor (private val localDataSource: CityLocalDataSource,
-                                          private val remoteDataSource: CityRemoteDataSource,
+class CityRepository @Inject constructor (private val localDataSource: ICityLocalDataSource,
+                                          private val remoteDataSource: ICityRemoteDataSource,
                                           private val ioDispatcher: CoroutineDispatcher) {
 
     fun getAndCacheCitiesByPageNumber(pageNumber: Int) = flow {
