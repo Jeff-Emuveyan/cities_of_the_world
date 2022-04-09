@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="nav_header_height">200dp</dimen>
+    <dimen name="text_size_default">18sp</dimen>
+    <dimen name="text_size_20sp">24sp</dimen>
+    <dimen name="text_size_26sp">36sp</dimen>
+    <dimen name="text_size_18sp">22sp</dimen>
+    <dimen name="text_size_16sp">20sp</dimen>
+    <dimen name="text_size_12sp">16sp</dimen>
+    <dimen name="text_size_10sp">13sp</dimen>
+</resources>

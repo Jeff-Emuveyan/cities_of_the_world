@@ -4,9 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="cities/src/main/res/drawable/circle_fade_green.xml" value="0.4119791666666667" />
+        <entry key="cities/src/main/res/drawable/ic_launcher_background.xml" value="0.440625" />
+        <entry key="cities/src/main/res/drawable/ic_ripple.xml" value="0.440625" />
+        <entry key="cities/src/main/res/layout/city_item.xml" value="0.3958333333333333" />
         <entry key="cities/src/main/res/layout/fragment_list_of_cities.xml" value="0.4244791666666667" />
         <entry key="cities/src/main/res/layout/fragment_map_of_cities.xml" value="0.4244791666666667" />
         <entry key="cities/src/main/res/layout/main_fragment.xml" value="0.25" />
+        <entry key="cities/src/main/res/layout/recycler_item_city.xml" value="0.335" />
       </map>
     </option>
   </component>
@@ -15,5 +20,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
   </component>
 </project>
