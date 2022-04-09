@@ -18,9 +18,11 @@ import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType
 import com.example.core.model.entity.CityEntity
 import com.fevziomurtekin.customprogress.Type
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@AndroidEntryPoint
 class ListOfCitiesFragment : Fragment() {
 
     private val sharedViewModel by activityViewModels<SharedViewModel>()
@@ -41,8 +43,8 @@ class ListOfCitiesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observe()
-        setUpUi()
+        observeData()
+        setUpUI(Result(UIStateType.DEFAULT))
     }
 
     override fun onDestroyView() {
@@ -50,11 +52,7 @@ class ListOfCitiesFragment : Fragment() {
         _binding = null
     }
 
-    private fun setUpUi() {
-        setUpRecyclerView()
-    }
-
-    private fun observe() {
+    private fun observeData() {
         sharedViewModel.uiState.onEach {
             setUpUI(it)
         }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
@@ -68,7 +66,7 @@ class ListOfCitiesFragment : Fragment() {
             UIStateType.SUCCESS -> { uiStateSuccess(result.cities) }
             UIStateType.NO_RESULT -> { uiStateNoResult() }
             UIStateType.NETWORK_ERROR -> { uiStateNetworkError() }
-            else -> { uiStateNoResult() }
+            UIStateType.DEFAULT -> { setUpRecyclerView() }
         }
     }
 

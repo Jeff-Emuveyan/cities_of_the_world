@@ -4,4 +4,5 @@
     <string name="cities_of_the_world">Cities of the world</string>
     <string name="msg_the_end">The end</string>
     <string name="msg_network_error">Network error. Tap here to try again</string>
+    <string name="msg_loading">Loading…</string>
 </resources>

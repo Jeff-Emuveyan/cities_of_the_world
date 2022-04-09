@@ -11,7 +11,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.cities.databinding.MainFragmentBinding
 import com.example.cities.ui.list.ListOfCitiesFragment
 import com.example.cities.ui.map.MapOfCitiesFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
     private val sharedViewModel by activityViewModels<SharedViewModel>()
