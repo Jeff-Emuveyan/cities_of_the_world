@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cities_nav_graph"
+    app:startDestination="@id/listOfCitiesFragment">
+
+    <fragment
+        android:id="@+id/listOfCitiesFragment"
+        android:name="com.example.cities.ui.list.ListOfCitiesFragment"
+        android:label="ListOfCitiesFragment">
+        <action
+            android:id="@+id/action_listOfCitiesFragment_to_mapOfCitiesFragment"
+            app:destination="@id/mapOfCitiesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/mapOfCitiesFragment"
+        android:name="com.example.cities.ui.map.MapOfCitiesFragment"
+        android:label="MapOfCitiesFragment">
+        <argument
+            android:name="latitude"
+            app:argType="float"
+            android:defaultValue="0.0" />
+        <argument
+            android:name="longitude"
+            app:argType="float"
+            android:defaultValue="0.0" />
+    </fragment>
+</navigation>

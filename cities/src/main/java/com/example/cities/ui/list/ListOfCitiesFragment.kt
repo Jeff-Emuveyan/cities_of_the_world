@@ -137,6 +137,6 @@ class ListOfCitiesFragment : Fragment() {
     }
 
     private fun navigateToMap(cityEntity: CityEntity) {
-
+        //val action = ListOfCitie
     }
 }
