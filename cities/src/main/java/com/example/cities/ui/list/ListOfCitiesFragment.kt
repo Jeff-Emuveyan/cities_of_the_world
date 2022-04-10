@@ -94,6 +94,7 @@ class ListOfCitiesFragment : Fragment() {
 
     private fun uiStateNoResult() = with(binding) {
         tvInfo.visibility = View.VISIBLE
+        tvInfo.setTextColor(resources.getColor(R.color.black))
         tvInfo.text = getString(R.string.msg_the_end)
         tvInfo.isEnabled = false
         progressBar.visibility = View.INVISIBLE
@@ -101,6 +102,7 @@ class ListOfCitiesFragment : Fragment() {
 
     private fun uiStateNetworkError() = with(binding) {
         tvInfo.visibility = View.VISIBLE
+        tvInfo.setTextColor(resources.getColor(R.color.red))
         tvInfo.text = getString(R.string.msg_network_error)
         tvInfo.isEnabled = true
         tvInfo.setOnClickListener {
