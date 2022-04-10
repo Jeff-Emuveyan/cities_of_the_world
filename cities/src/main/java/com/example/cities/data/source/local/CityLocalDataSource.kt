@@ -21,5 +21,5 @@ class CityLocalDataSource @Inject constructor(private val cityDao: CityDao,
 
 
     override fun getCitiesByCityName(cityName: String) =
-        cityDao.getAllByName(cityName)
+        cityDao.getAllByName("%${cityName}%")
 }
