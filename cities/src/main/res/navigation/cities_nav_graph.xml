@@ -33,5 +33,9 @@
             android:name="cityName"
             app:argType="string"
             android:defaultValue="N/A" />
+        <argument
+            android:name="countryName"
+            app:argType="string"
+            android:defaultValue="N/A" />
     </fragment>
 </navigation>

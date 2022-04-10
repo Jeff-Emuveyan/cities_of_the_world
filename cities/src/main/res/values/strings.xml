@@ -9,4 +9,5 @@
     <string name="switch_to_map_view"><u>Click on an item to switch to map view</u></string>
     <string name="no_location_found">Unable to get the location of this city</string>
     <string name="no_location_found_error">No location found for this particular city</string>
+    <string name="msg_location">Country: %1$s, City: %2$s</string>
 </resources>

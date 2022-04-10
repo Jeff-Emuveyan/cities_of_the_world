@@ -8,6 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.http.Query
 import javax.inject.Inject
 
 @Module
@@ -18,8 +19,8 @@ abstract class ServiceModule {
 }
 
 class ServiceImpl @Inject constructor(var retrofit: Retrofit): Service {
-    override suspend fun getCitiesByPageNumber(pageNumber: Int): Response<CitiesResponse> {
-        return retrofit.create(Service::class.java).getCitiesByPageNumber(pageNumber)
+    override suspend fun getCitiesByPageNumber(pageNumber: Int, country: String): Response<CitiesResponse> {
+        return retrofit.create(Service::class.java).getCitiesByPageNumber(pageNumber, country)
     }
 
     override suspend fun getCitiesByCityName(cityName: String): Response<CitiesResponse> {

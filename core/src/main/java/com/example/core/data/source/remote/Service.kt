@@ -8,7 +8,8 @@ import retrofit2.http.Query
 interface Service {
 
     @GET("city")
-    suspend fun getCitiesByPageNumber(@Query("page") pageNumber: Int): Response<CitiesResponse>
+    suspend fun getCitiesByPageNumber(@Query("page") pageNumber: Int,
+                                      @Query("include") country: String = "country"): Response<CitiesResponse>
 
     @GET("city")
     suspend fun getCitiesByCityName(@Query("filter[0][name][contains]") cityName: String): Response<CitiesResponse>

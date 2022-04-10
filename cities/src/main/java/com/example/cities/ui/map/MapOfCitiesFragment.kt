@@ -2,16 +2,13 @@ package com.example.cities.ui.map
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.cities.R
 import com.example.cities.databinding.FragmentMapOfCitiesBinding
-import com.example.cities.ui.SharedViewModel
 import com.example.cities.util.getAddress
 import com.example.core.model.dto.MapObject
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -62,10 +59,11 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
         val latitude = args.latitude
         val longitude = args.longitude
         val cityName = args.cityName
+        val countryName = args.countryName
         if (latitude == 0.0f || longitude == 0.0f) {
             uiStateNoResult()
         } else {
-            uiStateSuccess(MapObject(latitude.toDouble(), longitude.toDouble(), cityName))
+            uiStateSuccess(MapObject(latitude.toDouble(), longitude.toDouble(), cityName, countryName))
         }
     }
 
@@ -79,7 +77,9 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun uiStateSuccess(mapObject: MapObject) = with(binding) {
-        tvInfo.text = mapObject.locationName
+        val countryName = mapObject.countryName
+        val city = mapObject.cityName
+        tvInfo.text = getString(R.string.msg_location, countryName, city)
         googleMap?.let { addCityOnMap(requireContext(), it, mapObject) }
     }
 
@@ -87,7 +87,7 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
         googleMap.addMarker(
             MarkerOptions()
                 .position(LatLng(mapObject.latitude, mapObject.longitude))
-                .title(mapObject.locationName)
+                .title(mapObject.cityName)
                 .snippet("Address: ${getAddress(context,mapObject.latitude, mapObject.longitude)}")
         )
         zoomCameraToLocation(mapObject.latitude, mapObject.longitude)

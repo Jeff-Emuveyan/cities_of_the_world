@@ -144,8 +144,10 @@ class ListOfCitiesFragment : Fragment() {
         val latitude = cityEntity.lat?.toFloat()
         val longitude = cityEntity.lng?.toFloat()
         val cityName = cityEntity.name
-        if (latitude == null || longitude == null || cityName == null) return
-        val action = ListOfCitiesFragmentDirections.actionListOfCitiesFragmentToMapOfCitiesFragment(latitude, longitude, cityName)
+        val countryName = cityEntity.countryName
+        if (latitude == null || longitude == null || cityName == null || countryName == null) return
+        val action = ListOfCitiesFragmentDirections.
+            actionListOfCitiesFragmentToMapOfCitiesFragment(latitude, longitude, cityName, countryName)
         findNavController().navigate(action)
     }
 

@@ -10,5 +10,6 @@ data class CityEntity(
     @PrimaryKey val id: Int,
     val localName: String? = null,
     val lat: Double? = null,
-    val pageNumber: Int? = null
+    val pageNumber: Int? = null,
+    val countryName: String? = null
 )
