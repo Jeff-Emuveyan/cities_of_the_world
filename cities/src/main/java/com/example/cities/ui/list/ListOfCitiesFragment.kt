@@ -9,6 +9,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cities.R
@@ -137,6 +138,11 @@ class ListOfCitiesFragment : Fragment() {
     }
 
     private fun navigateToMap(cityEntity: CityEntity) {
-        //val action = ListOfCitie
+        val latitude = cityEntity.lat?.toFloat()
+        val longitude = cityEntity.lng?.toFloat()
+        val cityName = cityEntity.name
+        if (latitude == null || longitude == null || cityName == null) return
+        val action = ListOfCitiesFragmentDirections.actionListOfCitiesFragmentToMapOfCitiesFragment(latitude, longitude, cityName)
+        findNavController().navigate(action)
     }
 }

@@ -1,10 +1,7 @@
 package com.example.cities.util
 
-import android.content.Context
-import android.location.Geocoder
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.*
 
 abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
     private var mLayoutManager: RecyclerView.LayoutManager = layoutManager
@@ -52,14 +49,4 @@ abstract class EndlessRecyclerViewScrollListener(layoutManager: LinearLayoutMana
     }
 
     abstract fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?)
-}
-
-
-fun getAddress(context: Context, lat: Double, lon: Double): String? {
-    val geoCoder = Geocoder(context, Locale.getDefault())
-    val resultCount = 1
-    val address = geoCoder.getFromLocation(lat, lon, resultCount)
-    return "${address.firstOrNull()?.countryName}," +
-            " ${address.firstOrNull()?.locality}," +
-            " ${address.firstOrNull()?.thoroughfare}"
 }

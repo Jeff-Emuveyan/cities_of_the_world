@@ -2,20 +2,18 @@ package com.example.cities.ui.map
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.example.cities.R
 import com.example.cities.databinding.FragmentMapOfCitiesBinding
 import com.example.cities.ui.SharedViewModel
 import com.example.cities.util.getAddress
-import com.example.core.model.dto.Query
-import com.example.core.model.dto.QueryType
-import com.example.core.model.entity.CityEntity
+import com.example.core.model.dto.MapObject
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -24,18 +22,14 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import com.example.core.model.dto.ui.Result
-import com.example.core.model.dto.ui.UIStateType
 
 @AndroidEntryPoint
 class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
 
-    private val sharedViewModel by activityViewModels<SharedViewModel>()
     private var _binding: FragmentMapOfCitiesBinding? = null
     private val binding get() = _binding!!
     private var googleMap: GoogleMap? = null
+    private val args: MapOfCitiesFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +44,7 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpUI(Result(UIStateType.DEFAULT))
-        observeData()
+        setUpMap()
     }
 
     override fun onDestroyView() {
@@ -62,72 +55,42 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(mMap: GoogleMap) {
         mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
         googleMap = mMap
+        setUpUI(args)
     }
 
-    private fun setUpUI(result: Result) {
-        when(result.type) {
-            UIStateType.LOADING -> { uiStateLoading() }
-            UIStateType.SUCCESS -> { uiStateSuccess(result.cities) }
-            UIStateType.NO_RESULT -> { uiStateNoResult() }
-            UIStateType.NETWORK_ERROR -> { uiStateNetworkError() }
-            UIStateType.DEFAULT -> { setUpMap() }
+    private fun setUpUI(args: MapOfCitiesFragmentArgs) {
+        val latitude = args.latitude
+        val longitude = args.longitude
+        val cityName = args.cityName
+        if (latitude == 0.0f || longitude == 0.0f) {
+            uiStateNoResult()
+        } else {
+            uiStateSuccess(MapObject(latitude.toDouble(), longitude.toDouble(), cityName))
         }
     }
-
-    private fun uiStateLoading() = with(binding) {
-        tvInfo.visibility = View.VISIBLE
-        tvInfo.isEnabled = false
-        tvInfo.text = getString(R.string.msg_loading)
-    }
-
-    private fun uiStateSuccess(cities: List<CityEntity>?) = with(binding) {
-        if (cities == null) return@with
-        tvInfo.visibility = View.INVISIBLE
-        googleMap?.let { displayCities(requireContext(), it, cities) }
-    }
-
-    private fun uiStateNoResult() = with(binding) {
-        tvInfo.visibility = View.INVISIBLE
-        tvInfo.isEnabled = false
-    }
-
-    private fun uiStateNetworkError() = with(binding)  {
-        tvInfo.visibility = View.VISIBLE
-        tvInfo.text = getString(R.string.msg_network_error)
-        tvInfo.isEnabled = true
-        tvInfo.setOnClickListener {
-            getCitiesByPageNumber(sharedViewModel.getNextPageNumber())
-        }
-    }
-
-    private fun observeData() {
-        sharedViewModel.uiState.onEach {
-            setUpUI(it)
-        }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
-    }
-
-    private fun getCitiesByPageNumber(pageNumber: Int = 1) =
-        sharedViewModel.getCities(Query(QueryType.PAGE_NUMBER, pageNumber))
 
     private fun setUpMap() {
         val supportMapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         supportMapFragment?.getMapAsync(this)
     }
 
-    private fun displayCities(context: Context, googleMap: GoogleMap, cities: List<CityEntity>) {
-        cities.forEach { addCityOnMap(context, googleMap, it) }
+    private fun uiStateNoResult() = with(binding) {
+        tvInfo.text = getString(R.string.no_location_found)
     }
 
-    private fun addCityOnMap(context: Context, googleMap: GoogleMap, city: CityEntity) {
-        val latitude = city.lat ?: 0.0
-        val longitude = city.lng ?: 0.0
+    private fun uiStateSuccess(mapObject: MapObject) = with(binding) {
+        tvInfo.text = mapObject.locationName
+        googleMap?.let { addCityOnMap(requireContext(), it, mapObject) }
+    }
+
+    private fun addCityOnMap(context: Context, googleMap: GoogleMap, mapObject: MapObject) {
         googleMap.addMarker(
             MarkerOptions()
-                .position(LatLng(latitude, longitude))
-                .title(city.name)
-                .snippet("Address: ${getAddress(context, latitude,longitude)}")
+                .position(LatLng(mapObject.latitude, mapObject.longitude))
+                .title(mapObject.locationName)
+                .snippet("Address: ${getAddress(context,mapObject.latitude, mapObject.longitude)}")
         )
-        zoomCameraToLocation(latitude, longitude)
+        zoomCameraToLocation(mapObject.latitude, mapObject.longitude)
     }
 
     private fun zoomCameraToLocation(latitude: Double, longitude: Double) {
@@ -139,9 +102,5 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
             .build()
 
         googleMap?.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 3000, null)
-    }
-
-    private fun handleZoomInOnCityRequest(city: CityEntity) {
-       zoomCameraToLocation(city.lat ?: 0.0, city.lng ?: 0.0)
     }
 }

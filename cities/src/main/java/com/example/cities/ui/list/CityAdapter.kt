@@ -3,6 +3,7 @@ package com.example.cities.ui.list
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cities.R
 import com.example.cities.databinding.RecyclerItemCityBinding
@@ -19,11 +20,23 @@ class CityAdapter(var context: Context,
     override fun onBindViewHolder(holder: CityItem, position: Int) {
         val city = cities[position]
         holder.bind(city) {
-            onItemClicked(it)
+            handleItemClicked(it, onItemClicked)
         }
     }
 
     override fun getItemCount(): Int {
         return cities.size
+    }
+
+    private fun handleItemClicked(it: CityEntity, onItemClicked: (CityEntity) -> Unit) {
+        if (checkForLocation(it)) {
+            onItemClicked(it)
+        } else {
+            Toast.makeText(context, context.getString(R.string.no_location_found_error), Toast.LENGTH_LONG).show()
+        }
+    }
+    
+    private fun checkForLocation(cityEntity: CityEntity): Boolean {
+        return cityEntity.lat != null && cityEntity.lng != null
     }
 }
