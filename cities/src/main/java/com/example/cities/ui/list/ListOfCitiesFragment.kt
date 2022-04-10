@@ -78,7 +78,7 @@ class ListOfCitiesFragment : Fragment() {
     }
 
     private fun uiStateLoading() = with(binding) {
-        tvInfo.visibility = View.GONE
+        tvInfo.visibility = View.INVISIBLE
         tvInfo.isEnabled = false
         progressBar.visibility = View.VISIBLE
     }
@@ -125,7 +125,7 @@ class ListOfCitiesFragment : Fragment() {
                 super.onScrollStateChanged(recyclerView, newState)
 
                 if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
-
+                    getCitiesByPageNumber(listOfCitiesViewModel.getNextPageNumber())
                 }
             }
         })
