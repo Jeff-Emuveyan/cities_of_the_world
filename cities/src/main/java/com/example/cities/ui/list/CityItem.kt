@@ -1,14 +1,17 @@
 package com.example.cities.ui.list
 
-import android.view.View
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.example.cities.R
+import com.example.cities.databinding.RecyclerItemCityBinding
+import com.example.core.model.entity.CityEntity
 
-class CityItem(v: View): RecyclerView.ViewHolder(v) {
-    val tvName: TextView = v.findViewById(R.id.tvName)
-    val tvLName: TextView = v.findViewById(R.id.tvLocalName)
-    val tvLabel: TextView =  v.findViewById(R.id.tvLabel)
-    val parentLayout: ConstraintLayout = v.findViewById(R.id.parentLayout)
+class CityItem(val binding: RecyclerItemCityBinding): RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(city: CityEntity, onItemClicked: (CityEntity)-> Unit) {
+        binding.tvName.text = city.name
+        binding.tvLocalName.text = city.localName
+        binding.tvLabel.text = city.name?.take(2)
+        binding.parentLayout.setOnClickListener {
+            onItemClicked(city)
+        }
+    }
 }

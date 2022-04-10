@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cities.R
+import com.example.cities.databinding.RecyclerItemCityBinding
 import com.example.core.model.entity.CityEntity
 
 class CityAdapter(var context: Context,
@@ -12,18 +13,13 @@ class CityAdapter(var context: Context,
                   val onItemClicked: (CityEntity)-> Unit) : RecyclerView.Adapter<CityItem>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityItem {
-        val inflater = LayoutInflater.from(context)
-        val view = inflater.inflate(R.layout.recycler_item_city, parent, false)
-        return CityItem(view)
+        return CityItem(RecyclerItemCityBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: CityItem, position: Int) {
         val city = cities[position]
-        holder.tvName.text = city.name
-        holder.tvLName.text = city.localName
-        holder.tvLabel.text = city.name?.take(2)
-        holder.parentLayout.setOnClickListener {
-            onItemClicked(city)
+        holder.bind(city) {
+            onItemClicked(it)
         }
     }
 
