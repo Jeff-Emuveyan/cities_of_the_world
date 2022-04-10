@@ -1,6 +1,7 @@
 package com.example.cities.ui.list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -119,9 +120,13 @@ class ListOfCitiesFragment : Fragment() {
         adapter = cityAdapter
         setHasFixedSize(true)
         addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                getCitiesByPageNumber(listOfCitiesViewModel.getNextPageNumber())
+
+                if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE) {
+
+                }
             }
         })
     }

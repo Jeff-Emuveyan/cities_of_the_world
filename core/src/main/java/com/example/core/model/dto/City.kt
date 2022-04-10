@@ -11,10 +11,10 @@ data class City(
     val local_name: String? = null,
     val lat: Double? = null,
     val countryId: Int? = null,
-    val country: Country
+    val country: Country? = null
 ) {
 
     fun toCityEntity(pageNumber: Int): CityEntity? {
-        return if (id == null) null else CityEntity(lng, name, id, local_name, lat, pageNumber, countryName = country.name)
+        return if (id == null) null else CityEntity(lng, name, id, local_name, lat, pageNumber, countryName = country?.name)
     }
 }

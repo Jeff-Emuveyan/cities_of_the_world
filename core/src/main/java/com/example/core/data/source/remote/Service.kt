@@ -12,5 +12,6 @@ interface Service {
                                       @Query("include") country: String = "country"): Response<CitiesResponse>
 
     @GET("city")
-    suspend fun getCitiesByCityName(@Query("filter[0][name][contains]") cityName: String): Response<CitiesResponse>
+    suspend fun getCitiesByCityName(@Query("filter[0][name][contains]") cityName: String,
+                                    @Query("include") country: String = "country"): Response<CitiesResponse>
 }

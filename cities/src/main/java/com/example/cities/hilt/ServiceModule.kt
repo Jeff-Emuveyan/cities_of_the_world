@@ -23,7 +23,8 @@ class ServiceImpl @Inject constructor(var retrofit: Retrofit): Service {
         return retrofit.create(Service::class.java).getCitiesByPageNumber(pageNumber, country)
     }
 
-    override suspend fun getCitiesByCityName(cityName: String): Response<CitiesResponse> {
-        return retrofit.create(Service::class.java).getCitiesByCityName(cityName)
+    override suspend fun getCitiesByCityName(cityName: String,
+                                             country: String): Response<CitiesResponse> {
+        return retrofit.create(Service::class.java).getCitiesByCityName(cityName, country)
     }
 }
