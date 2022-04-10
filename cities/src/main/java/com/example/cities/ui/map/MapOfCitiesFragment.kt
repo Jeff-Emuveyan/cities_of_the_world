@@ -11,7 +11,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.cities.R
 import com.example.cities.databinding.FragmentMapOfCitiesBinding
-import com.example.cities.ui.main.SharedViewModel
+import com.example.cities.ui.SharedViewModel
 import com.example.cities.util.getAddress
 import com.example.core.model.dto.Query
 import com.example.core.model.dto.QueryType
@@ -104,10 +104,6 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
         sharedViewModel.uiState.onEach {
             setUpUI(it)
         }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
-
-        sharedViewModel.zoomInOnCityFlow.onEach {
-            handleZoomInOnCityRequest(it)
-        }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
     }
 
     private fun getCitiesByPageNumber(pageNumber: Int = 1) =
@@ -145,11 +141,7 @@ class MapOfCitiesFragment : Fragment(), OnMapReadyCallback {
         googleMap?.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 3000, null)
     }
 
-    private fun handleZoomInOnCityRequest(it: Pair<Boolean, CityEntity>) {
-        val zoom = it.first
-        val city = it.second
-        if (zoom) {
-            zoomCameraToLocation(city.lat ?: 0.0, city.lng ?: 0.0)
-        }
+    private fun handleZoomInOnCityRequest(city: CityEntity) {
+       zoomCameraToLocation(city.lat ?: 0.0, city.lng ?: 0.0)
     }
 }

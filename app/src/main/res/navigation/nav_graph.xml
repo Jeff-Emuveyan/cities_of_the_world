@@ -3,10 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/listOfCitiesFragment">
 
     <fragment
-        android:id="@+id/mainFragment"
-        android:name="com.example.cities.ui.main.MainFragment"
-        android:label="MainFragment" />
+        android:id="@+id/listOfCitiesFragment"
+        android:name="com.example.cities.ui.list.ListOfCitiesFragment"
+        android:label="ListOfCitiesFragment">
+        <action
+            android:id="@+id/action_listOfCitiesFragment_to_mapOfCitiesFragment"
+            app:destination="@id/mapOfCitiesFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/mapOfCitiesFragment"
+        android:name="com.example.cities.ui.map.MapOfCitiesFragment"
+        android:label="MapOfCitiesFragment"/>
+
 </navigation>

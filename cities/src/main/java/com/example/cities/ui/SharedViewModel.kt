@@ -1,4 +1,4 @@
-package com.example.cities.ui.main
+package com.example.cities.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,9 +21,6 @@ class SharedViewModel @Inject constructor(private val repository: CityRepository
     private val _uiState = MutableStateFlow(Result(DEFAULT))
     val uiState = _uiState.asStateFlow()
 
-    private val _zoomInOnCityFlow = MutableSharedFlow<Pair<Boolean, CityEntity>>()
-    val zoomInOnCityFlow = _zoomInOnCityFlow.asSharedFlow()
-
     fun getCities(query: Query) = viewModelScope.launch {
         if (_uiState.value.type == LOADING) return@launch
 
@@ -42,8 +39,4 @@ class SharedViewModel @Inject constructor(private val repository: CityRepository
     }
 
     fun getNextPageNumber() = currentPageNumber + 1
-
-    fun zoomInOnCity(zoom: Boolean, cityEntity: CityEntity) = viewModelScope.launch {
-        _zoomInOnCityFlow.emit(Pair(zoom, cityEntity))
-    }
 }

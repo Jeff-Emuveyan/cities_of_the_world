@@ -13,14 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cities.R
 import com.example.cities.databinding.FragmentListOfCitiesBinding
-import com.example.cities.ui.main.SharedViewModel
+import com.example.cities.ui.SharedViewModel
 import com.example.cities.util.EndlessRecyclerViewScrollListener
 import com.example.core.model.dto.Query
 import com.example.core.model.dto.QueryType
 import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType
 import com.example.core.model.entity.CityEntity
-import com.fevziomurtekin.customprogress.Type
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -138,6 +137,6 @@ class ListOfCitiesFragment : Fragment() {
     }
 
     private fun navigateToMap(cityEntity: CityEntity) {
-        sharedViewModel.zoomInOnCity(true, cityEntity)
+
     }
 }
