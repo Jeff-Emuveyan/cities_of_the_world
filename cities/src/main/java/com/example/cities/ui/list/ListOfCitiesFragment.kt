@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cities.R
 import com.example.cities.databinding.FragmentListOfCitiesBinding
-import com.example.cities.ui.SharedViewModel
 import com.example.cities.util.EndlessRecyclerViewScrollListener
 import com.example.core.model.dto.Query
 import com.example.core.model.dto.QueryType
@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ListOfCitiesFragment : Fragment() {
 
-    private val sharedViewModel by activityViewModels<SharedViewModel>()
+    private val listOfCitiesViewModel by viewModels<ListOfCitiesViewModel>()
     private var _binding: FragmentListOfCitiesBinding? = null
     private val binding get() = _binding!!
     private var cityAdapter: CityAdapter? = null
@@ -58,7 +58,7 @@ class ListOfCitiesFragment : Fragment() {
     }
 
     private fun observeData() {
-        sharedViewModel.uiState.onEach {
+        listOfCitiesViewModel.uiState.onEach {
             setUpUI(it)
         }.flowWithLifecycle(lifecycle).launchIn(lifecycleScope)
 
@@ -105,13 +105,13 @@ class ListOfCitiesFragment : Fragment() {
         tvInfo.text = getString(R.string.msg_network_error)
         tvInfo.isEnabled = true
         tvInfo.setOnClickListener {
-            getCitiesByPageNumber(sharedViewModel.getNextPageNumber())
+            getCitiesByPageNumber(listOfCitiesViewModel.getNextPageNumber())
         }
         progressBar.visibility = View.INVISIBLE
     }
 
     private fun getCitiesByPageNumber(pageNumber: Int = 1) =
-        sharedViewModel.getCities(Query(QueryType.PAGE_NUMBER, pageNumber))
+        listOfCitiesViewModel.getCities(Query(QueryType.PAGE_NUMBER, pageNumber))
 
     private fun setUpRecyclerView() = with(binding.recyclerView) {
         val linearLayoutManager = LinearLayoutManager(requireContext())
@@ -122,7 +122,7 @@ class ListOfCitiesFragment : Fragment() {
         setHasFixedSize(true)
         addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
             override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
-                getCitiesByPageNumber(sharedViewModel.getNextPageNumber())
+                getCitiesByPageNumber(listOfCitiesViewModel.getNextPageNumber())
             }
         })
     }
@@ -163,7 +163,7 @@ class ListOfCitiesFragment : Fragment() {
         } else {
             cityAdapter?.cities?.clear()
             cityAdapter?.notifyDataSetChanged()
-            sharedViewModel.getCities(Query(QueryType.CITY_NAME, searchWord))
+            listOfCitiesViewModel.getCities(Query(QueryType.CITY_NAME, searchWord))
         }
     }
 }

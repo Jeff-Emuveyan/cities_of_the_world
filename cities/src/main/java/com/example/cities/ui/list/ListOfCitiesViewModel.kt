@@ -1,4 +1,4 @@
-package com.example.cities.ui
+package com.example.cities.ui.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SharedViewModel @Inject constructor(private val repository: CityRepository) : ViewModel() {
+class ListOfCitiesViewModel @Inject constructor(private val repository: CityRepository) : ViewModel() {
 
     private var currentPageNumber = 0
 
