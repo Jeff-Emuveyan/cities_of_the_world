@@ -79,13 +79,13 @@ class ListOfCitiesFragment : Fragment() {
     private fun uiStateLoading() = with(binding) {
         tvInfo.visibility = View.GONE
         tvInfo.isEnabled = false
-        setUpProgressBar()
+        progressBar.visibility = View.VISIBLE
     }
 
     private fun uiStateSuccess(cities: List<CityEntity>?) = with(binding) {
         if (cities == null) return@with
         tvInfo.visibility = View.GONE
-        progressBar.visibility = View.GONE
+        progressBar.visibility = View.INVISIBLE
 
         cityAdapter?.cities?.addAll(cities)
         cityAdapter?.notifyDataSetChanged()
@@ -110,13 +110,6 @@ class ListOfCitiesFragment : Fragment() {
 
     private fun getCitiesByPageNumber(pageNumber: Int = 1) =
         sharedViewModel.getCities(Query(QueryType.PAGE_NUMBER, pageNumber))
-
-    private fun setUpProgressBar() = with(binding) {
-        progressBar.visibility = View.VISIBLE
-        progressBar.settype(Type.RIPPLE)
-        progressBar.setdurationTime(100)
-        progressBar.show()
-    }
 
     private fun setUpRecyclerView() = with(binding.recyclerView) {
         val linearLayoutManager = LinearLayoutManager(requireContext())
