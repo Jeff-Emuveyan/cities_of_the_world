@@ -1,12 +1,11 @@
 package com.example.cities.ui.list
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,16 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cities.R
 import com.example.cities.databinding.FragmentListOfCitiesBinding
-import com.example.cities.util.EndlessRecyclerViewScrollListener
 import com.example.core.model.dto.Query
 import com.example.core.model.dto.QueryType
+import com.example.core.model.dto.Result
 import com.example.core.model.dto.ui.UIStateType
 import com.example.core.model.entity.CityEntity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import com.example.core.model.dto.Result
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -120,8 +118,9 @@ class ListOfCitiesFragment : Fragment() {
         cityAdapter = CityAdapter(requireContext(), mutableListOf()) { navigateToMap(it) }
         adapter = cityAdapter
         setHasFixedSize(true)
-        addOnScrollListener(object : EndlessRecyclerViewScrollListener(linearLayoutManager) {
-            override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView?) {
+        addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
                 getCitiesByPageNumber(listOfCitiesViewModel.getNextPageNumber())
             }
         })

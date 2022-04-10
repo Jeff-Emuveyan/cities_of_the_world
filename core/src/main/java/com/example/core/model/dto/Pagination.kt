@@ -1,8 +1,8 @@
 package com.example.core.model.dto
 
 data class Pagination(
-    val perPage: Int? = null,
+    val per_page: Int? = null,
     val total: Int? = null,
-    val lastPage: Int? = null,
-    val currentPage: Int? = null
+    val last_page: Int? = null,
+    val current_page: Int? = null
 )

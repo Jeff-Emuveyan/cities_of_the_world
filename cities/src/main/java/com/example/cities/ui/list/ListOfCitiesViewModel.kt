@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ListOfCitiesViewModel @Inject constructor(private val repository: CityRepository) : ViewModel() {
 
-    private var currentPageNumber = 0
+    private var currentPageNumber = 1
 
     private val _uiState = MutableStateFlow(Result(DEFAULT))
     val uiState = _uiState.asStateFlow()

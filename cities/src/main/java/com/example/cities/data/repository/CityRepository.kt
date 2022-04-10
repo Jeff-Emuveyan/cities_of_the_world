@@ -68,7 +68,7 @@ class CityRepository @Inject constructor (private val localDataSource: CityLocal
 
     fun getListFromResponse(resultFromRemote: CitiesResponse?): List<CityEntity>? {
         val list = resultFromRemote?.data?.items
-        val pageNumber = resultFromRemote?.data?.pagination?.currentPage ?: 1
+        val pageNumber = resultFromRemote?.data?.pagination?.current_page ?: 1
         return when {
             list == null -> null
             list.isEmpty() -> emptyList()
