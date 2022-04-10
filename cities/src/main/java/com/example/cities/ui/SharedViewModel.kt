@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.cities.data.repository.CityRepository
 import com.example.core.model.dto.Query
 import com.example.core.model.dto.QueryType.*
-import com.example.core.model.dto.ui.Result
+import com.example.core.model.dto.Result
 import com.example.core.model.dto.ui.UIStateType.*
 import com.example.core.model.entity.CityEntity
 import dagger.hilt.android.lifecycle.HiltViewModel

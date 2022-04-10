@@ -10,6 +10,6 @@ interface Service {
     @GET("city")
     suspend fun getCitiesByPageNumber(@Query("page") pageNumber: Int): Response<CitiesResponse>
 
-    @GET("city?filter[0][name][contains]={cityName}")
-    suspend fun getCitiesByCityName(cityName: String): Response<CitiesResponse>
+    @GET("city")
+    suspend fun getCitiesByCityName(@Query("filter[0][name][contains]") cityName: String): Response<CitiesResponse>
 }

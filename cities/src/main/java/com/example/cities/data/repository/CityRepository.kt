@@ -8,7 +8,7 @@ import com.example.core.model.dto.CitiesResponse
 import com.example.core.model.dto.City
 import com.example.core.model.dto.Query
 import com.example.core.model.dto.QueryType.*
-import com.example.core.model.dto.ui.Result
+import com.example.core.model.dto.Result
 import com.example.core.model.dto.ui.UIStateType.*
 import com.example.core.model.entity.CityEntity
 import kotlinx.coroutines.CoroutineDispatcher

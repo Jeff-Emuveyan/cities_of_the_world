@@ -18,12 +18,14 @@ import com.example.cities.ui.SharedViewModel
 import com.example.cities.util.EndlessRecyclerViewScrollListener
 import com.example.core.model.dto.Query
 import com.example.core.model.dto.QueryType
-import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType
 import com.example.core.model.entity.CityEntity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.example.core.model.dto.Result
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ListOfCitiesFragment : Fragment() {
@@ -127,8 +129,9 @@ class ListOfCitiesFragment : Fragment() {
 
     private fun setUpSearchView() = with(binding) {
         tvSearch.doAfterTextChanged {
-            val searchWord = it.toString()
-            sharedViewModel.getCities(Query(QueryType.CITY_NAME, searchWord))
+            observeDebounce {
+                handleSearchOperation(it.toString())
+            }
         }
 
         tvSearchParent.setEndIconOnClickListener {
@@ -144,5 +147,21 @@ class ListOfCitiesFragment : Fragment() {
         if (latitude == null || longitude == null || cityName == null) return
         val action = ListOfCitiesFragmentDirections.actionListOfCitiesFragmentToMapOfCitiesFragment(latitude, longitude, cityName)
         findNavController().navigate(action)
+    }
+
+    private fun observeDebounce(delay: Long = 1500, function: () -> Unit) = lifecycleScope.launch {
+        delay(delay)
+        function()
+    }
+
+    private fun handleSearchOperation(searchWord: String) {
+        if (searchWord.isEmpty() || searchWord.isBlank()) {
+            // for cases where the user cleared the search box manually:
+            getCitiesByPageNumber()
+        } else {
+            cityAdapter?.cities?.clear()
+            cityAdapter?.notifyDataSetChanged()
+            sharedViewModel.getCities(Query(QueryType.CITY_NAME, searchWord))
+        }
     }
 }
