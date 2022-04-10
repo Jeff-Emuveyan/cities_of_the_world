@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 interface CityDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend infix fun save(cityEntity: CityEntity)
+    suspend fun save(cityEntity: CityEntity)
 
     @Query("SELECT * FROM city ORDER BY id DESC LIMIT :numberOfItems")
     fun getMostRecent(numberOfItems: Int): List<CityEntity>

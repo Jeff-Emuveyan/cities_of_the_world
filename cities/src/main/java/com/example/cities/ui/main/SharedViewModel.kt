@@ -8,10 +8,12 @@ import com.example.core.model.dto.QueryType.*
 import com.example.core.model.dto.ui.Result
 import com.example.core.model.dto.ui.UIStateType.*
 import com.example.core.model.entity.CityEntity
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class SharedViewModel @Inject constructor(private val repository: CityRepository) : ViewModel() {
 
     private var currentPageNumber = 0

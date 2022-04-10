@@ -12,7 +12,7 @@ class CityLocalDataSource @Inject constructor(private val cityDao: CityDao,
 
     override suspend fun save(list: List<CityEntity>) = withContext(ioDispatcher) {
         for (cityEntity in list) {
-            cityDao save cityEntity
+            cityDao.save(cityEntity)
         }
     }
 

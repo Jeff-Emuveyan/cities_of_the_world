@@ -21,16 +21,15 @@ class CityDaoImpl @Inject constructor(val db: AppDatabase): CityDao {
         return db.cityDao().save(cityEntity)
     }
 
-    override fun getMostRecent(numberOfItems: Int): Flow<List<CityEntity>> {
+    override fun getMostRecent(numberOfItems: Int): List<CityEntity> {
         return db.cityDao().getMostRecent(numberOfItems)
     }
 
-    override fun getAllByPageNumber(pageNumber: Int): Flow<List<CityEntity>> {
+    override fun getAllByPageNumber(pageNumber: Int): List<CityEntity> {
         return db.cityDao().getAllByPageNumber(pageNumber)
     }
 
-    override fun getAllByName(cityName: String): Flow<List<CityEntity>> {
+    override fun getAllByName(cityName: String): List<CityEntity> {
         return db.cityDao().getAllByName(cityName)
     }
-
 }
