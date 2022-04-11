@@ -11,6 +11,6 @@ fun getAddress(context: Context, lat: Double, lon: Double): String? = try {
     val address = geoCoder.getFromLocation(lat, lon, resultCount)
     "${address.firstOrNull()?.countryName}," +
             " ${address.firstOrNull()?.locality}"
-} catch (e: IllegalArgumentException) {
+} catch (e: Exception) {
     "N/A"
 }
