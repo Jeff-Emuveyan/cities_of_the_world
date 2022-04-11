@@ -16,11 +16,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class CityRepository @Inject constructor (private val localDataSource: CityLocalDataSource,
+open class CityRepository @Inject constructor (private val localDataSource: CityLocalDataSource,
                                           private val remoteDataSource: CityRemoteDataSource,
                                           private val ioDispatcher: CoroutineDispatcher) {
 
-    fun fetchAndCacheCities(query: Query) = flow {
+    open fun fetchAndCacheCities(query: Query) = flow {
         val remoteResponse = when(query.queryType) {
             PAGE_NUMBER -> {
                 remoteDataSource.getCitiesByPageNumber(query.value as Int)
